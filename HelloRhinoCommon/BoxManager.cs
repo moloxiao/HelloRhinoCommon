@@ -32,32 +32,16 @@ namespace HelloRhinoCommon
         }
 
 
-
         public int CreateBox(RhinoDoc doc)
         {
             int count = _boxIds.Count;
             Point3d basePoint = new Point3d(count * (_length + _spacing), 0, 0); // Length along x-axis
-            Point3d corner1 = basePoint;
-            Point3d corner2 = new Point3d(basePoint.X + _length, basePoint.Y + _width, basePoint.Z + _height); // Width along y-axis and height along z-axis
 
-            // create box( BREP )
-            Box box = new Box(new BoundingBox(corner1, corner2));
-            Brep brep = box.ToBrep();
+            // Check and create block definition
+            string blockName = "BoxBlock";
+            int blockIndex = CreateBlockDefinition(doc, blockName);
 
-            // create block define
-            string blockName = "BoxBlock_" + count;
-            while (doc.InstanceDefinitions.Find(blockName) != null)
-            {
-                blockName = "BoxBlock_" + Guid.NewGuid().ToString("N");
-            }
-
-            var attributes = new ObjectAttributes();
-            var geometry = new List<GeometryBase> { brep };
-            var attributeList = new List<ObjectAttributes> { attributes };
-
-            int blockIndex = doc.InstanceDefinitions.Add(blockName, "Box block definition", basePoint, geometry, attributeList);
-
-            // check if success add block
+            // Check if block definition was successfully added
             if (blockIndex >= 0)
             {
                 Vector3d translationVector = new Vector3d(basePoint);
@@ -72,10 +56,31 @@ namespace HelloRhinoCommon
             return 0;
         }
 
+        private int CreateBlockDefinition(RhinoDoc doc, string blockName)
+        {
+            // Check if a block definition with the same name already exists
+            var instanceDefinition = doc.InstanceDefinitions.Find(blockName, true);
+            if (instanceDefinition != null)
+            {
+                return instanceDefinition.Index;
+            }
 
+            // If not, create a new block definition
+            Point3d corner1 = Point3d.Origin;
+            Point3d corner2 = new Point3d(_length, _width, _height); // Length along x-axis, Width along y-axis, and Height along z-axis
 
+            // Create a BREP containing the Box
+            Box box = new Box(new BoundingBox(corner1, corner2));
+            Brep brep = box.ToBrep();
 
+            var attributes = new ObjectAttributes();
+            var geometry = new List<GeometryBase> { brep };
+            var attributeList = new List<ObjectAttributes> { attributes };
 
+            // Create the block definition
+            int blockIndex = doc.InstanceDefinitions.Add(blockName, "Box block definition", corner1, geometry, attributeList);
+            return blockIndex;
+        }
 
 
         public int DeleteBox(RhinoDoc doc)

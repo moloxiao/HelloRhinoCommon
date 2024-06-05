@@ -40,6 +40,7 @@ Therefore, we plan to achieve these two goals by completing these tasks [Still u
 | 3 | P0.0.1 | first mini MVP | 04-06-2024 | 0.3 | 1.5  |
 | 4 | P0.0.1 | read require again and init readme   | 04-06-2024 | 0.8 | 2.3 |
 | 5 | P0.0.2 | Refactor the code to separate the calculation logic into Agent and BoxManager. | 05-06-2024 | 1 | 3.3  |
+| 6 | P0.0.2 | use InstanceObecjt to impl box. | 05-06-2024 | 0.2 | 3.5  |
 
 supplementary statement :
 1. **id:2** Initially, I tried to manually create the plugin through ChatGPT, but it didn't work. I then turned to Google to check the official documentation and set up the basic environment by installing VS plugins.
