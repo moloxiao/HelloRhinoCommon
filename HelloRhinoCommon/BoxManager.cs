@@ -41,6 +41,7 @@ namespace HelloRhinoCommon
 
         public int CreateBox(RhinoDoc doc)
         {
+            BoxManager.ValidateDoc(doc);
 
             int count = _boxIds.Count;
             Point3d basePoint = new Point3d(count * (_length + _spacing), 0, 0); // Length along x-axis

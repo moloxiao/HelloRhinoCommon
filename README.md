@@ -12,13 +12,13 @@ Therefore, we plan to achieve these two goals by completing these tasks [Still u
 | :--:| :---: | :---:| :---: | :--------- |
 | 1, 2 | Finish | 04-06-2024 | P0.0,1 | implement a minimum viable product (MVP) |
 | 1, 2 | Finish | 04-06-2024 | P0.0.1 | Set up the environment  |
-| 1, 2 | TODO   | 05-06-2024 | P0.0.2 | Refactor code and modularize code |
+| 1, 2 | Finish   | 05-06-2024 | P0.0.2 | Refactor code and modularize code |
 
 
 # Version  
 | version | date | State | introduction |
 | :--:| :---: | :---: | :----- |
-| P0.0.3 | 05-06-2024 | TODO   | ...... |
+| P0.0.3 | TODO | TODO   | ...... |
 | [P0.0.2](#p0-0-2) | 05-06-2024 | TODO   | Refactor the code and organize it in a way that is familiar to me |
 | [P0.0.1](#p0-0-1) | 04-06-2024 | Finish | Initialize the Mac development environment. Implement a simplified version |
 
@@ -26,6 +26,7 @@ Therefore, we plan to achieve these two goals by completing these tasks [Still u
 1. Independent configuration file
 2. Independent calculation implementation
 3. Optional: Include unit tests
+4. use InstanceObject
 
 ## P0.0.1  
 1. Set up the environment
@@ -41,6 +42,7 @@ Therefore, we plan to achieve these two goals by completing these tasks [Still u
 | 4 | P0.0.1 | read require again and init readme   | 04-06-2024 | 0.8 | 2.3 |
 | 5 | P0.0.2 | Refactor the code to separate the calculation logic into Agent and BoxManager. | 05-06-2024 | 1 | 3.3  |
 | 6 | P0.0.2 | use InstanceObecjt to impl box. | 05-06-2024 | 0.2 | 3.5  |
+| 6 | P0.0.2 | add params check. | 05-06-2024 | 1 | 4.5  |
 
 supplementary statement :
 1. **id:2** Initially, I tried to manually create the plugin through ChatGPT, but it didn't work. I then turned to Google to check the official documentation and set up the basic environment by installing VS plugins.
@@ -102,9 +104,18 @@ public int CreateBox(RhinoDoc doc)
 
 ```
 
-If using method annotations, frameworks like AOP in .NET (such as PostSharp or Fody) can be utilized to implement method-level annotations.
-TODO
-
+If using method **annotations**, frameworks like AOP in .NET (such as PostSharp) can be utilized to implement method-level annotations.
+for example :
+```
+[ValidateDocAspect]
+        public int CreateBox(RhinoDoc doc)
+        {
+            ... ...
+            return 0;
+        }
+```
+In the current project, annotations don't seem necessary. I tested using PostSharp, but in my Mac environment, it required complex permission configurations, so I didn't submit this test code.
+When writing in Java, I often use reflection to achieve this. In .NET, DynamicProxy can be used (e.g., Castle Core). I'm not very familiar with this part and still need to learn more.
 
 
 # Resources:
