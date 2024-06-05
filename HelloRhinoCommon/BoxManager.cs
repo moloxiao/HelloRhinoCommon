@@ -31,9 +31,17 @@ namespace HelloRhinoCommon
             }
         }
 
+        public static void ValidateDoc(RhinoDoc doc)
+        {
+            if (doc == null)
+            {
+                throw new ArgumentNullException(nameof(doc), "The Rhino document cannot be null.");
+            }
+        }
 
         public int CreateBox(RhinoDoc doc)
         {
+
             int count = _boxIds.Count;
             Point3d basePoint = new Point3d(count * (_length + _spacing), 0, 0); // Length along x-axis
 
@@ -58,6 +66,8 @@ namespace HelloRhinoCommon
 
         private int CreateBlockDefinition(RhinoDoc doc, string blockName)
         {
+            BoxManager.ValidateDoc(doc);
+
             // Check if a block definition with the same name already exists
             var instanceDefinition = doc.InstanceDefinitions.Find(blockName, true);
             if (instanceDefinition != null)
@@ -85,6 +95,8 @@ namespace HelloRhinoCommon
 
         public int DeleteBox(RhinoDoc doc)
         {
+            BoxManager.ValidateDoc(doc);
+
             if (_boxIds.Count > 0)
             {
                 doc.Objects.Delete(_boxIds[_boxIds.Count - 1], true);
@@ -99,6 +111,7 @@ namespace HelloRhinoCommon
 
         public int DeleteAllBox(RhinoDoc doc)
         {
+            BoxManager.ValidateDoc(doc);
             if (_boxIds.Count > 0)
             {
                 foreach (var id in _boxIds)

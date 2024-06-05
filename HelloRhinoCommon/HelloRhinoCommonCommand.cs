@@ -1,7 +1,10 @@
-﻿using Rhino;
+﻿using System;
+using System.Diagnostics.Tracing;
+using Rhino;
 using Rhino.Commands;
 using Rhino.Input;
 using Rhino.Input.Custom;
+using Rhino.UI;
 
 namespace HelloRhinoCommon
 {
@@ -30,58 +33,98 @@ namespace HelloRhinoCommon
                 return getInput.CommandResult();
             int input = getInput.Number();
 
-            var boxManager = Agent.Instance.BoxManager;
-
-            switch (input)
+            try
             {
-                case 1:
-                    // Create a new box
-
-                    if (boxManager.CreateBox(doc) == 0)
-                    {
-                        RhinoApp.WriteLine("create a box");
-                    }
-                    else
-                    {
-                        RhinoApp.WriteLine("create a box");
-                    }
-                    break;
-                case -1:
-                    // Delete the last created box
-
-                    if (boxManager.DeleteBox(doc) == 0)
-                    {
-                        RhinoApp.WriteLine("delete a box");
-                    }
-                    else
-                    {
-                        RhinoApp.WriteLine("no box need to delete");
-                    }
-                    break;
-                case -2:
-                    // Delete all created boxes
-                    if (boxManager.DeleteAllBox(doc) == 0)
-                    {
-                        RhinoApp.WriteLine("delete all boxes");
-                    }
-                    else
-                    {
-                        RhinoApp.WriteLine("no box need to delete");
-                    }
-                    break;
-                case 0:
-                    // Show the current number of boxes
-                    RhinoApp.WriteLine($"current box : {boxManager.GetCurrentBoxNumbers()}");
-                    break;
-                default:
-                    RhinoApp.WriteLine("no support numbers");
-                    break;
+                AgentCommand(input, doc);
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                RhinoApp.WriteLine($"Error: {ex.Message}");
+                RhinoApp.WriteLine("The command input is not valid. Please use a supported command.");
+            }
+            catch (Exception ex)
+            {
+                RhinoApp.WriteLine($"Unexpected error: {ex.Message}");
+                RhinoApp.WriteLine("An unexpected error occurred. Please try again or contact support.");
+            }
+
 
             doc.Views.Redraw();
             return Result.Success;
         }
 
+        /// <summary>
+        /// Executes a command based on the input parameter to manage boxes in the Rhino document.
+        /// </summary>
+        /// <param name="input">The command input. Valid values are 1 (create a box), -1 (delete the last created box), -2 (delete all boxes), and 0 (show the current number of boxes).</param>
+        /// <param name="doc">The Rhino document to apply the commands on.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the input command is not supported.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the Rhino document is null.</exception>
+        private void AgentCommand(int input, RhinoDoc doc)
+        {
+            if (doc == null)
+            {
+                throw new ArgumentNullException(nameof(doc), "The Rhino document cannot be null.");
+            }
+
+            var boxManager = Agent.Instance.BoxManager;
+
+            try
+            {
+                switch (input)
+                {
+                    case 1:
+                        // Create a new box
+
+                        if (boxManager.CreateBox(doc) == 0)
+                        {
+                            RhinoApp.WriteLine("create a box");
+                        }
+                        else
+                        {
+                            RhinoApp.WriteLine("create a box");
+                        }
+                        break;
+                    case -1:
+                        // Delete the last created box
+
+                        if (boxManager.DeleteBox(doc) == 0)
+                        {
+                            RhinoApp.WriteLine("delete a box");
+                        }
+                        else
+                        {
+                            RhinoApp.WriteLine("no box need to delete");
+                        }
+                        break;
+                    case -2:
+                        // Delete all created boxes
+                        if (boxManager.DeleteAllBox(doc) == 0)
+                        {
+                            RhinoApp.WriteLine("delete all boxes");
+                        }
+                        else
+                        {
+                            RhinoApp.WriteLine("no box need to delete");
+                        }
+                        break;
+                    case 0:
+                        // Show the current number of boxes
+                        RhinoApp.WriteLine($"current box : {boxManager.GetCurrentBoxNumbers()}");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(input), "The input command is not supported.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+
+
+        }
     }
 }
 

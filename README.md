@@ -46,13 +46,67 @@ supplementary statement :
 1. **id:2** Initially, I tried to manually create the plugin through ChatGPT, but it didn't work. I then turned to Google to check the official documentation and set up the basic environment by installing VS plugins.
 2. **id:3** It took me about 20 minutes to refactor the code. I wanted to use a separate namespace, but I'm not familiar with Visual Studio and C#'s namespace mechanism. After spending 30 minutes without successfully referencing it, I'll set aside namespaces for now and ensure it runs correctly first.
 
-# challenges and solutions  
-TODO
 
 # FAQ  
+These are just my opinions and not the only options. In some cases, I don't have a strong preference; this is just my usual way of handling things.
+
+## Q1 About Agent and XXManager
+most of the business logic can be separated from the UI. The business logic can be accessed through a single Agent, which is designed as a singleton. Different business processes will be accessed through the Agent.
+Structurally, it looks like this :  
+```
+--HelloRhiCommon
+----Agent
+------BoxManager
+------Box
+------...
+------XXManager
+------XX
+```
+Access and call using the following method :
+```
+var boxManager = Agent.Instance.BoxManager;
+boxManager.CreateBox(doc);
+```
+I usually write it this way when developing an SDK.
+
+## Q2 parameter vlidation and Excepition
+I don't fully understand the edge cases in the logic (such as a parameter that makes it impossible to create a BOX). I will focus on explaining parameter validation, which mainly includes two situations:
+1. validation of user input parameters on the interface
+2. validation of parameters in function methods
+
+From a programming perspective, it includes:
+1. choosing the appropriate design patterns for implementation (to facilitate maintenance and modification);
+2. deciding when to use return values and when to use exceptions.
+
+In actual programming, it's not always necessary to strictly follow the best practices recommended for a specific language. Sometimes, simply using different return values is sufficient to achieve the functionality. Therefore, if this part is designed collaboratively, it's best to agree on parameter validation and exception handling conventions from the beginning.
+
+## Q3 parameter vlidation and annotations(AOP)
+Among the engineers I've worked with before, some are very fond of using annotations. I don't have a strong preference, but sometimes they can make the code appear more sophisticated.
+For example, in BoxManager, several methods need to check if the passed doc object is null.
+Therefore, a static method can be created independently.   
+```
+public static void ValidateDoc(RhinoDoc doc)
+        {
+            if (doc == null)
+            {
+                throw new ArgumentNullException(nameof(doc), "The Rhino document cannot be null.");
+            }
+        }
+```
+called wherever needed ： 
+```
+public int CreateBox(RhinoDoc doc)
+{
+    BoxManager.ValidateDoc(doc);
+    ... ...
+
+```
+
+If using method annotations, frameworks like AOP in .NET (such as PostSharp or Fody) can be utilized to implement method-level annotations.
+TODO
 
 
 
 # Resources:
-* [rhino Doc  : init mac environment](https://developer.rhino3d.com/guides/rhinocommon/your-first-plugin-mac/)
+* [rhino Doc : init mac environment](https://developer.rhino3d.com/guides/rhinocommon/your-first-plugin-mac/)
 * [rhino Doc : rhinocommon](https://developer.rhino3d.com/samples/#rhinocommon)
