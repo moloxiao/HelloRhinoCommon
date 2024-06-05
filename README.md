@@ -33,15 +33,17 @@ Therefore, we plan to achieve these two goals by completing these tasks [Still u
 
 
 # Spend Time  
-| id | task | date | hours | sum hours |
-| :--:| :------ | :---:| :---: | :---: |
-| 1 | read require | 04-06-2024 | 0.2 | 0.2 |
-| 2 | init environment | 04-06-2024 | 1 | 1.2  |
-| 3 | first mini MVP | 04-06-2024 | 0.3 | 1.5  |
-| 4 | read require again and init readme   | 04-06-2024 | 0.8 | 2.3 |
+| id | version |task | date | hours | sum hours |
+| :--:| :--: | :------ | :---:| :---: | :---: |
+| 1 | P0.0.1 | read require | 04-06-2024 | 0.2 | 0.2 |
+| 2 | P0.0.1 | init environment | 04-06-2024 | 1 | 1.2  |
+| 3 | P0.0.1 | first mini MVP | 04-06-2024 | 0.3 | 1.5  |
+| 4 | P0.0.1 | read require again and init readme   | 04-06-2024 | 0.8 | 2.3 |
+| 5 | P0.0.2 | Refactor the code to separate the calculation logic into Agent and BoxManager. | 05-06-2024 | 1 | 3.3  |
 
 supplementary statement :
 1. **id:2** Initially, I tried to manually create the plugin through ChatGPT, but it didn't work. I then turned to Google to check the official documentation and set up the basic environment by installing VS plugins.
+2. **id:3** It took me about 20 minutes to refactor the code. I wanted to use a separate namespace, but I'm not familiar with Visual Studio and C#'s namespace mechanism. After spending 30 minutes without successfully referencing it, I'll set aside namespaces for now and ensure it runs correctly first.
 
 # challenges and solutions  
 TODO

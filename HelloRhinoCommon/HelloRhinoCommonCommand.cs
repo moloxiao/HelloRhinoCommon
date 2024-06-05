@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Rhino;
+﻿using Rhino;
 using Rhino.Commands;
-using Rhino.Geometry;
 using Rhino.Input;
 using Rhino.Input.Custom;
 
@@ -10,11 +7,6 @@ namespace HelloRhinoCommon
 {
     public class HelloRhinoCommonCommand : Command
     {
-        private static List<Guid> _boxIds = new List<Guid>();
-        private static double _width = 92.0;
-        private static double _length = 1200.0;
-        private static double _height = 2400.0;
-        private static double _spacing = 2000.0;
 
         public HelloRhinoCommonCommand()
         {
@@ -27,7 +19,7 @@ namespace HelloRhinoCommon
         public static HelloRhinoCommonCommand Instance { get; private set; }
 
         ///<returns>The command name as it appears on the Rhino command line.</returns>
-        public override string EnglishName => "HelloDrawLine";
+        public override string EnglishName => "HelloDrawBox";
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
@@ -38,19 +30,27 @@ namespace HelloRhinoCommon
                 return getInput.CommandResult();
             int input = getInput.Number();
 
+            var boxManager = Agent.Instance.BoxManager;
+
             switch (input)
             {
                 case 1:
                     // Create a new box
-                    CreateBox(doc);
-                    RhinoApp.WriteLine("create a box");
+
+                    if (boxManager.CreateBox(doc) == 0)
+                    {
+                        RhinoApp.WriteLine("create a box");
+                    }
+                    else
+                    {
+                        RhinoApp.WriteLine("create a box");
+                    }
                     break;
                 case -1:
                     // Delete the last created box
-                    if (_boxIds.Count > 0)
+
+                    if (boxManager.DeleteBox(doc) == 0)
                     {
-                        doc.Objects.Delete(_boxIds[_boxIds.Count - 1], true);
-                        _boxIds.RemoveAt(_boxIds.Count - 1);
                         RhinoApp.WriteLine("delete a box");
                     }
                     else
@@ -60,13 +60,8 @@ namespace HelloRhinoCommon
                     break;
                 case -2:
                     // Delete all created boxes
-                    if (_boxIds.Count > 0)
+                    if (boxManager.DeleteAllBox(doc) == 0)
                     {
-                        foreach (var id in _boxIds)
-                        {
-                            doc.Objects.Delete(id, true);
-                        }
-                        _boxIds.Clear();
                         RhinoApp.WriteLine("delete all boxes");
                     }
                     else
@@ -76,7 +71,7 @@ namespace HelloRhinoCommon
                     break;
                 case 0:
                     // Show the current number of boxes
-                    RhinoApp.WriteLine($"current box : {_boxIds.Count}");
+                    RhinoApp.WriteLine($"current box : {boxManager.GetCurrentBoxNumbers()}");
                     break;
                 default:
                     RhinoApp.WriteLine("no support numbers");
@@ -87,18 +82,6 @@ namespace HelloRhinoCommon
             return Result.Success;
         }
 
-        private void CreateBox(RhinoDoc doc)
-        {
-            int count = _boxIds.Count;
-            Point3d basePoint = new Point3d(count * (_length + _spacing), 0, 0); // Length along x-axis
-            Point3d corner1 = basePoint;
-            Point3d corner2 = new Point3d(basePoint.X + _length, basePoint.Y + _width, basePoint.Z + _height); // Width along y-axis and height along z-axis
-
-            Box box = new Box(new BoundingBox(corner1, corner2));
-            Brep brep = box.ToBrep();
-            Guid boxId = doc.Objects.AddBrep(brep);
-            _boxIds.Add(boxId);
-        }
     }
 }
 
